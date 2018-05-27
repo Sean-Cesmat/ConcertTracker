@@ -6,7 +6,7 @@ import Navigation from './Navigation'
 var fullWidth = Dimensions.get('window').width; //full width
 var height = Dimensions.get('window').height; //full height
 
-export default class ConcertList extends React.Component {
+export default class ShowList extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -14,11 +14,13 @@ export default class ConcertList extends React.Component {
     };
   }
 
-  componentDidMount() {
-    axios.get('http://192.168.0.11:8081/concerts/by-artist').then( result => {
+  componentWillMount() {
+    const artist = this.props.navigation.getParam('artist');
+    axios.get('http://192.168.0.11:8081/concerts/' + artist).then( result => {
       // Alert.alert('result.data')
+      console.log('hi ' + JSON.stringify(result.data))
       this.setState({
-        list: Object.entries(result.data.concerts),
+        list: JSON.stringify(result.data),
       })
     }).catch( err => console.log(err))
     // axios.get('http://192.168.0.11:8081/concerts').then( result => {
@@ -29,44 +31,52 @@ export default class ConcertList extends React.Component {
     // }).catch( err => console.log(err))
   }
 
-  update() {
-    axios.get('http://192.168.0.11:8081/concerts').then( result => {
-      // Alert.alert('result.data')
-      this.setState({
-        list: result.data,
-      })
-
-    }).catch( err => console.log(err))
-  }
-
   edit(id) {
     console.log(id)
     this.props.navigation.navigate('EditConcert', {concertId: id, list: this.state.list})
     // Alert.alert('edit concert: ' + id)
   };
 
+  deleteShow(id) {
+    console.log(id)
+    Alert.alert(
+      'Are you sure?',
+      'This cannot be undone.',
+      [
+        {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+        {text: 'Delete', onPress: () => {
+          axios.delete('http://192.168.0.11:8081/concerts/show/' + id).then( result => {
+            console.log(result)
+          }).catch( err => console.log(err))
+          this.props.navigation.navigate('Home');}
+        },
+      ],
+      { cancelable: false }
+    )
+  }
+
   render() {
-    let totals
-    if (this.state.list) {
-      totals = this.state.list.map((item, i) => {
-        console.log(item[0]);
+    let list
+    if (this.state.list && this.state.list !== undefined) {
+      const parsedList = JSON.parse(this.state.list)
+      list = parsedList.map((item, i) => {
         return (
           <View key={i} style={styles.listItem}>
-            <Text style={{fontSize: 20, flex:4}}>{item[0]}</Text>
-            <Text style={{flex: 1}}>{item[1]}</Text>
+            <View style={{flex: 4}}>
+              <Text style={{fontSize: 20}}>{item.location}</Text>
+              <Text>{item.date}</Text>
+            </View>
             <Button
-              title="View Shows"
-              onPress={() => this.props.navigation.navigate('ShowList', {artist: item[0]})}
-              style={{flex: 2}}
-            />
-            <Text>{this.props.user._id}</Text>
+              title="Edit"
+              style={styles.editBtn}
+              onPress={() => {this.edit(item._id)}} />
+            <Button
+              title="Delete"
+              style={styles.deleteBtn}
+              onPress={() => {this.deleteShow(item._id)}} />
           </View>
         )
-      });
-
-
-      //console.log(timeSeen)
-      // artist = this.state.list.concerts[0].artist
+      })
 
     }
     return (
@@ -76,7 +86,7 @@ export default class ConcertList extends React.Component {
         </View>
         <View style={{flex: 11, paddingTop: 5,}}>
           <ScrollView>
-            {totals}
+            {list}
           </ScrollView>
         </View>
       </View>
@@ -86,14 +96,17 @@ export default class ConcertList extends React.Component {
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#fff',
     width: fullWidth,
     height: height,
+    // alignItems: 'center',
+    // justifyContent: 'center',
   },
   listItem: {
     width: fullWidth - 10,
     display: 'flex',
     justifyContent: 'space-between',
-    alignItems: 'center',
+    alignItems: 'flex-start',
     flexDirection: 'row',
     margin: 5,
     marginTop: 2,
@@ -102,7 +115,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#dedede'
   },
   editBtn: {
-    right: 0,
-    top: 0,
+    flex: 1
+  },
+  deleteBtn: {
+    flex: 1
   }
 });

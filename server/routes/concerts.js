@@ -2,11 +2,29 @@ var express = require('express');
 var router = express.Router();
 var Concert = require("../models/concerts")
 
-router.get('/user/:userId', (req, res) => {
-  Concert.find({user: req.params.userId}, 'artist location date memories', function(error, concerts) {
+router.get('/', (req, res) => {
+  Concert.find({}, 'artist location date memories', function(error, concerts) {
     if (error) { console.log(error) }
     res.send({
       concerts: concerts
+    })
+  }).sort({_id: -1})
+})
+router.get('/by-artist', (req, res) => {
+  Concert.find({}, 'artist location date memories', function(error, concerts) {
+    if (error) { console.log(error) }
+    let artistTotals = {}
+    concerts.forEach((concert) => {
+
+      if (artistTotals[concert.artist] === undefined) {
+        artistTotals[concert.artist] = 1
+      } else {
+        artistTotals[concert.artist] += 1
+      }
+    })
+    console.log(artistTotals)
+    res.send({
+      concerts: artistTotals
     })
   }).sort({_id: -1})
 })
@@ -37,12 +55,24 @@ router.post('/', (req, res) => {
   })
 })
 
-router.get('/:id', (req, res) => {
+router.get('/:artist', (req, res) => {
   var db = req.db;
+  Concert.find({artist: req.params.artist}, 'artist location date memories', function(error, concert) {
+    if (error) {
+      console.log(error);
+    }
+    res.send(concert)
+  })
+})
+
+router.get('/edit/:id', (req, res) => {
+  var db = req.db;
+  console.log('hello')
   Concert.findById(req.params.id, 'artist location date memories', function(error, concert) {
     if (error) {
       console.log(error);
     }
+    console.log(concert)
     res.send(concert)
   })
 })
@@ -69,7 +99,7 @@ router.put('/:id', (req, res) => {
 })
 
 // Delete a concert
-router.delete('/:id', (req, res) => {
+router.delete('/show/:id', (req, res) => {
   var db = req.db;
   Concert.remove({
     _id: req.params.id

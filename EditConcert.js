@@ -19,26 +19,34 @@ export default class NewConcert extends React.Component {
 
   }
 
-  addNewConcert() {
-    const fullList = this.props.navigation.getParam('list')
-    axios.post('http://192.168.0.11:8081/concerts', {
+  componentDidMount() {
+    const concertId = this.props.navigation.getParam('concertId');
+    console.log('concert ' + concertId)
+    axios.get('http://192.168.0.11:8081/concerts/edit/' + concertId).then( result => {
+      //Alert.alert(result.data._id)
+      console.log('results: ' + result.data)
+      this.setState({
+        artist: result.data.artist,
+        location: result.data.location,
+        memories: result.data.memories,
+        date: result.data.date
+      })
+    }).catch( err => console.log(err))
+  }
+
+  updateConcert() {
+    let concertId = this.props.navigation.getParam('concertId');
+    axios.put('http://192.168.0.11:8081/concerts/' + concertId, {
       artist: this.state.artist,
       location: this.state.location,
       date: this.state.date,
       memories: this.state.memories
     }).then( result => {
       this.props.navigation.navigate('Home')
-      // this.setState({
-      //   artist: '',
-      //   location: '',
-      //   memories: '',
-      //   date:""
-      // })
     }).catch( err => console.log(err))
   }
 
   render() {
-
     return (
       <View style={styles.container}>
         <View style={{flex: 1}}>
@@ -97,24 +105,23 @@ export default class NewConcert extends React.Component {
           <View style={styles.buttonCont}>
             <Button
               onPress={() => {
-                this.addNewConcert();
+                this.updateConcert();
               }}
-              title="Add New Concert"
+              title="Update Concert"
               color="#fff"
-              accessibilityLabel="Add New Concert"
-              style={styles.button}
-            />
+              accessibilityLabel="Update Concert"
+              style={styles.button} />
           </View>
         </View>
       </View>
+
     );
   }
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    backgroundColor: '#1ab0a2',
+    backgroundColor: '#fff',
     height: height,
   },
   buttonCont: {
