@@ -1,17 +1,21 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button, Alert, TextInput } from 'react-native';
+import { StyleSheet, Text, View, Button, Alert, TextInput, Dimensions } from 'react-native';
 import DatePicker from 'react-native-datepicker'
 import axios from 'axios'
+var fullWidth = Dimensions.get('window').width; //full width
+var height = Dimensions.get('window').height; //full height
 
 export default class App extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = {
-      artist: 'Artist Name',
-      location: 'Location',
-      memories: 'Memories',
-      date:"2018-01-01"
+      artist: '',
+      location: '',
+      memories: '',
+      date:""
     };
+
   }
 
   addNewConcert() {
@@ -23,10 +27,10 @@ export default class App extends React.Component {
     }).then( result => {
       Alert.alert('result.data')
       this.setState({
-        artist: 'Artist Name',
-        location: 'Location',
-        memories: 'Memories',
-        date:"2018-01-01"
+        artist: '',
+        location: '',
+        memories: '',
+        date:""
       })
     }).catch( err => console.log(err))
   }
@@ -35,23 +39,21 @@ export default class App extends React.Component {
     return (
       <View style={styles.container}>
         <TextInput
+          placeholder="Artist Name"
           onChangeText={(artist) => this.setState({artist})}
           value={this.state.artist}
           style={styles.textInput}
         />
-        <TextInput
-          onChangeText={(location) => this.setState({location})}
-          value={this.state.location}
-          style={styles.textInput}
-        />
         <DatePicker
-          style={{width: 200}}
+          style={{
+            width: fullWidth - 36,
+            marginTop: 7,
+            marginBottom: 7}
+          }
           date={this.state.date}
           mode="date"
           placeholder="select date"
           format="YYYY-MM-DD"
-          minDate="2016-05-01"
-          maxDate="2016-06-01"
           confirmBtnText="Confirm"
           cancelBtnText="Cancel"
           customStyles={{
@@ -59,16 +61,27 @@ export default class App extends React.Component {
               position: 'absolute',
               left: 0,
               top: 4,
-              marginLeft: 0
+              marginLeft: 0,
             },
             dateInput: {
-              marginLeft: 36
+              marginLeft: 45,
+              backgroundColor: '#fff',
+              borderRadius: 4,
+
+
             }
             // ... You can check the source to find the other keys.
           }}
           onDateChange={(date) => {this.setState({date: date})}}
         />
         <TextInput
+          placeholder="Location"
+          onChangeText={(location) => this.setState({location})}
+          value={this.state.location}
+          style={styles.textInput}
+        />
+        <TextInput
+          placeholder="Memories"
           onChangeText={(memories) => this.setState({memories})}
           value={this.state.memories}
           style={styles.textInput}
@@ -93,12 +106,12 @@ export default class App extends React.Component {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: '#1ab0a2',
     alignItems: 'center',
     justifyContent: 'center',
   },
   buttonCont: {
-    backgroundColor: '#08426a',
+    backgroundColor: '#9248e6',
     paddingLeft: 10,
     paddingRight: 10,
     paddingBottom: 0,
@@ -109,13 +122,15 @@ const styles = StyleSheet.create({
   },
   textInput: {
     height: 40,
-    borderColor: 'gray',
+    borderColor: '#ededed',
     borderWidth: 1,
+    borderRadius: 4,
     alignSelf: 'stretch',
     marginLeft: 15,
     marginRight: 15,
     marginTop: 7,
     marginBottom: 7,
     padding: 5,
+    backgroundColor: '#fff'
   }
 });
