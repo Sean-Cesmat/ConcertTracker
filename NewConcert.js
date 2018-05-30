@@ -21,7 +21,7 @@ export default class NewConcert extends React.Component {
 
   addNewConcert() {
     const fullList = this.props.navigation.getParam('list')
-    axios.post('http://192.168.0.11:8081/concerts', {
+    axios.post('http://10.1.5.42:8081/concerts', {
       artist: this.state.artist,
       location: this.state.location,
       date: this.state.date,

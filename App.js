@@ -7,6 +7,7 @@ import NewConcert from './NewConcert'
 import EditConcert from './EditConcert'
 import ShowList from './ShowList'
 import SignUp from './SignUp'
+import Login from './Login'
 
 const RootStack = createSwitchNavigator({
   Home: { screen: ConcertList },
@@ -14,6 +15,7 @@ const RootStack = createSwitchNavigator({
   EditConcert: { screen: EditConcert },
   ShowList: { screen: ShowList },
   SignUp: { screen: SignUp },
+  Login: { screen: Login },
 },
 {
   initialRouteName: 'Home',
@@ -37,7 +39,7 @@ export default class App extends React.Component {
         user: {}
       })
     } else {
-      axios.post('http://192.168.0.11:8081/auth/me/from/token', {
+      axios.post('http://10.1.5.42:8081/auth/me/from/token', {
         token // same as token: token
       }).then( result => {
         AsyncStorage.setItem('mernToken', result.data.token)

@@ -34,6 +34,14 @@ export default class Navigation extends React.Component {
               color="#fff"
               accessibilityLabel="SignUp"
               style={styles.button} />
+              <Button
+                onPress={() => {
+                  this.props.navigation.navigate('Login')
+                }}
+                title="Login"
+                color="#fff"
+                accessibilityLabel="Login"
+                style={styles.button} />
           <View style={styles.buttonCont}>
             <Button
               onPress={() => {

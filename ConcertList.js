@@ -15,7 +15,7 @@ export default class ConcertList extends React.Component {
   }
 
   componentDidMount() {
-    axios.get('http://192.168.0.11:8081/concerts/by-artist').then( result => {
+    axios.get('http://10.1.5.42:8081/concerts/by-artist').then( result => {
       // Alert.alert('result.data')
       this.setState({
         list: Object.entries(result.data.concerts),
@@ -30,7 +30,7 @@ export default class ConcertList extends React.Component {
   }
 
   update() {
-    axios.get('http://192.168.0.11:8081/concerts').then( result => {
+    axios.get('http://10.1.5.42:8081/concerts').then( result => {
       // Alert.alert('result.data')
       this.setState({
         list: result.data,
@@ -59,7 +59,7 @@ export default class ConcertList extends React.Component {
               onPress={() => this.props.navigation.navigate('ShowList', {artist: item[0]})}
               style={{flex: 2}}
             />
-            <Text>{this.props.user._id}</Text>
+            <Text>{JSON.stringify(this.props.navigation.user)}</Text>
           </View>
         )
       });
