@@ -22,7 +22,7 @@ export default class NewConcert extends React.Component {
   componentDidMount() {
     const concertId = this.props.navigation.getParam('concertId');
     console.log('concert ' + concertId)
-    axios.get('http://10.1.5.42:8081/concerts/edit/' + concertId).then( result => {
+    axios.get('http://192.168.0.11:8081/concerts/edit/' + concertId).then( result => {
       //Alert.alert(result.data._id)
       console.log('results: ' + result.data)
       this.setState({
@@ -36,7 +36,7 @@ export default class NewConcert extends React.Component {
 
   updateConcert() {
     let concertId = this.props.navigation.getParam('concertId');
-    axios.put('http://10.1.5.42:8081/concerts/' + concertId, {
+    axios.put('http://192.168.0.11:8081/concerts/' + concertId, {
       artist: this.state.artist,
       location: this.state.location,
       date: this.state.date,

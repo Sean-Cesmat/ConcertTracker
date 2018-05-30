@@ -52,10 +52,10 @@ router.post('/login', (req, res, next) => {
         });
       } else {
         console.log("Passwords don't match")
-        res.send.json({
-          error: true,
-          message: 'Email or password is incorrect'
-        }).toObject()
+        // res.send.json({
+        //   error: true,
+        //   message: 'Email or password is incorrect'
+        // }).toObject()
       }
     }
   })

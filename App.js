@@ -2,6 +2,8 @@ import React from 'react';
 import { AsyncStorage, StyleSheet, Text, View, Button, Alert, TextInput, Dimensions } from 'react-native';
 import { createSwitchNavigator, createStackNavigator, NavigationActions } from 'react-navigation';
 import axios from 'axios'
+import store from './store';
+import { Provider } from 'react-redux';
 import ConcertList from './ConcertList'
 import NewConcert from './NewConcert'
 import EditConcert from './EditConcert'
@@ -53,7 +55,9 @@ export default class App extends React.Component {
 
   render() {
     return (
+      <Provider store={store}>
         <RootStack user={this.state.user} />
+      </Provider>
     )
   }
 }

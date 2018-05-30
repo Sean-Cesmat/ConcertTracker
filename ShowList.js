@@ -16,7 +16,7 @@ export default class ShowList extends React.Component {
 
   componentWillMount() {
     const artist = this.props.navigation.getParam('artist');
-    axios.get('http://10.1.5.42:8081/concerts/' + artist).then( result => {
+    axios.get('http://192.168.0.11:8081/concerts/' + artist).then( result => {
       // Alert.alert('result.data')
       console.log('hi ' + JSON.stringify(result.data))
       this.setState({
